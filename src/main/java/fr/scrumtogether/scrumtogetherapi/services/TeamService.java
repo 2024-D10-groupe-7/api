@@ -125,11 +125,5 @@ public class TeamService {
         }
 
         teamUser.setTeamRole(teamUserDto.getTeamRole());
-
-
-        /*  todo avec modification du teamuser avec des ancienne valeur mettre les nouvelles valeur de teamuserdto 
-         juste update le role verif entre teamuserdto et team
-         verif si user et le meme entre teamUserDto et teamUser
-         si le cas j'update */
     }
 }

@@ -2,8 +2,7 @@ package fr.scrumtogether.scrumtogetherapi.entities;
 
 import fr.scrumtogether.scrumtogetherapi.utils.jpa.JsonListConverter;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,8 +10,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "project")
 public class Project {
