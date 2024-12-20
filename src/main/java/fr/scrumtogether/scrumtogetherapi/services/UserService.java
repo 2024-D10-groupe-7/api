@@ -1,15 +1,21 @@
 package fr.scrumtogether.scrumtogetherapi.services;
 
 import com.google.common.util.concurrent.RateLimiter;
+import fr.scrumtogether.scrumtogetherapi.config.BrevoConfig;
 import fr.scrumtogether.scrumtogetherapi.config.RateLimitConfig;
 import fr.scrumtogether.scrumtogetherapi.dtos.UserDto;
 import fr.scrumtogether.scrumtogetherapi.entities.User;
 import fr.scrumtogether.scrumtogetherapi.entities.enums.Role;
+import fr.scrumtogether.scrumtogetherapi.events.UserCreationEvent;
 import fr.scrumtogether.scrumtogetherapi.exceptions.*;
 import fr.scrumtogether.scrumtogetherapi.repositories.UserRepository;
+import fr.scrumtogether.scrumtogetherapi.tools.mail.contacts.Contact;
+import fr.scrumtogether.scrumtogetherapi.tools.mail.contacts.STContacts;
 import fr.scrumtogether.scrumtogetherapi.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,11 +32,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Validated
 @PreAuthorize("isAuthenticated()")
-public class UserService {
+public class UserService implements ApplicationListener<UserCreationEvent> {
     private final UserRepository userRepository;
     private final SecurityUtils securityUtils;
     private final RateLimitConfig rateLimitConfig;
     private final AuditService auditService;
+    private final STContacts contactList;
+    private final BrevoConfig brevoConfig;
 
     @Transactional(readOnly = true)
     public Page<User> getAll(Integer pageNumber, Integer pageSize) {
@@ -362,5 +370,15 @@ public class UserService {
                 .verifiedEmail(user.getVerifiedEmail())
                 .version(user.getVersion())
                 .build();
+    }
+
+    @Override
+    public void onApplicationEvent(@NotNull UserCreationEvent event) {
+        Contact contact = contactList.createContact(event.getUser());
+        event.getUser().setContactId(contact.getExternalId());
+        contactList.addContactToList(brevoConfig.getScrumTogetherUsersListId(), contact);
+        if (event.getUser().getRole() == Role.ADMIN) {
+            contactList.addContactToList(brevoConfig.getScrumTogetherAdminsListId(), contact);
+        }
     }
 }

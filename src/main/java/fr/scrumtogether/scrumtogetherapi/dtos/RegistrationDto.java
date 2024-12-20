@@ -1,14 +1,11 @@
 package fr.scrumtogether.scrumtogetherapi.dtos;
 
+import fr.scrumtogether.scrumtogetherapi.annotations.PasswordMatching;
 import fr.scrumtogether.scrumtogetherapi.entities.User;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
-import fr.scrumtogether.scrumtogetherapi.annotations.PasswordMatching;
 
 import java.io.Serializable;
 
@@ -90,18 +87,23 @@ public class RegistrationDto implements Serializable {
     @NotBlank(message = "Password confirmation is required")
     String confirmPassword;
 
+    @AssertTrue(message = "You must accept terms and usage rules")
+    Boolean acceptedUsageRules;
+
+
     /**
      * Creates a new RegistrationDto instance.
      * Trims any leading or trailing whitespace from string fields while preserving passwords as-is.
      */
     @Builder
     public RegistrationDto(String lastName, String firstName, String email,
-                           String username, String password, String confirmPassword) {
+                           String username, String password, String confirmPassword, Boolean acceptedUsageRules) {
         this.lastName = lastName != null ? lastName.trim() : null;
         this.firstName = firstName != null ? firstName.trim() : null;
         this.email = email != null ? email.trim() : null;
         this.username = username != null ? username.trim() : null;
         this.password = password;
         this.confirmPassword = confirmPassword;
+        this.acceptedUsageRules = acceptedUsageRules;
     }
 }

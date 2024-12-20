@@ -1,13 +1,10 @@
 package fr.scrumtogether.scrumtogetherapi.annotations;
 
+import fr.scrumtogether.scrumtogetherapi.validators.PasswordMatchingValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import fr.scrumtogether.scrumtogetherapi.validators.PasswordMatchingValidator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Annotation used to validate that two specified fields within a class have matching values.
@@ -38,6 +35,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordMatchingValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(PasswordMatching.List.class)
 public @interface PasswordMatching {
     /**
      * Specifies the field name representing the primary password in the target

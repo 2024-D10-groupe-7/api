@@ -24,6 +24,8 @@ services:
       SCRUMTOGETHER_DATABASE_URL: 'jdbc:mariadb://db:3306/scrumtogether'
       SCRUMTOGETHER_DATABASE_USERNAME: 'root'
       SCRUMTOGETHER_DATABASE_PASSWORD: 'verysecret'
+      BREVO_API_KEY: ""
+      BREVO_API_KEY_FILE: "/run/secrets/brevo_api_key"
     ports:
       - 8080:8080
       - 8000:8000
@@ -31,6 +33,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    secrets:
+      - brevo_api_key
     develop:
       watch:
         - action: sync
@@ -63,6 +67,9 @@ services:
       timeout: 5s
       retries: 3
 
+secrets:
+  brevo_api_key:
+    file: brevo_api_key.txt
 volumes:
   maven-cache:
   datas:

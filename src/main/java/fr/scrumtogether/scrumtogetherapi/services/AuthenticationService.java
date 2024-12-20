@@ -9,6 +9,7 @@ import fr.scrumtogether.scrumtogetherapi.repositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 public class AuthenticationService {
+    private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthenticationManager authManager;
@@ -56,12 +58,6 @@ public class AuthenticationService {
             User user = userMapper.toEntity(registrationDto);
             userRepository.save(user);
             log.info("User successfully registered: {}", user.getUsername());
-
-            // Here you could also:
-            // - Send verification email
-            // - Create initial user settings
-            // - Send welcome notification
-
         } catch (Exception e) {
             log.error("Unexpected error during registration for user: {}", registrationDto.getUsername(), e);
             throw new AuthenticationException("Registration failed");

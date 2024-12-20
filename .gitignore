@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### PORJECT ###
+/brevo_api_key.txt

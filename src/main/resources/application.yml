@@ -23,7 +23,8 @@ spring:
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
+    fr.scrumtogether: DEBUG
 
 security:
   jwt:
@@ -34,3 +35,10 @@ security:
 rate-limit:
   requests-per-minute: 2
   expiration-minutes: 15
+
+brevo:
+  api-key: ${BREVO_API_KEY}
+  api-key-file: ${BREVO_API_KEY_FILE}
+  scrum-together-folder-id: 2
+  scrum-together-users-list-id: 4
+  scrum-together-admins-list-id: 7

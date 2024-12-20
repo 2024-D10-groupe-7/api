@@ -42,6 +42,7 @@ public class UserMapper extends RepresentationModelAssemblerSupport<User, UserDt
                 .password(passwordEncoder.encode(registrationDto.getPassword()))
                 .verifiedEmail(false)
                 .role(Role.DEFAULT)
+                .acceptedUsageRules(registrationDto.getAcceptedUsageRules())
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package fr.scrumtogether.scrumtogetherapi.entities;
 
 import fr.scrumtogether.scrumtogetherapi.entities.enums.Role;
+import fr.scrumtogether.scrumtogetherapi.services.entitylistener.UserListener;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,7 +33,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, UserListener.class})
 @Table(name = "user", indexes = {
         @Index(name = "idx_user_username", columnList = "username"),
         @Index(name = "idx_user_email", columnList = "email")
@@ -129,6 +130,20 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * Indicates whether the user has accepted the usage rules of the application.
+     * <p>
+     * This variable is a Boolean field mapped to the "accepted_usage_rules" column
+     * in the database. It has a default value of {@code false}, meaning that by
+     * default, a user is assumed to not have accepted the usage rules.
+     */
+    @Builder.Default
+    @Column(name = "accepted_usage_rules")
+    private Boolean acceptedUsageRules = false;
+
+    @Column(name = "usage_rules_accepted_at")
+    private LocalDateTime usageRulesAcceptedAt;
+
     @OneToMany(mappedBy = "user")
     private Set<TeamUser> teamUsers = new LinkedHashSet<>();
 
@@ -146,6 +161,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "reporter")
     private Set<BugReport> fixedBugReports = new LinkedHashSet<>();
+
+    @Column(name = "contact_id")
+    private String contactId;
 
     /**
      * Returns the authorities granted to the user.

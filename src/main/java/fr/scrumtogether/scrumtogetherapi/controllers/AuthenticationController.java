@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final JwtService jwtService; // Ensure JwtService is implemented properly in the services package
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody @Valid RegistrationDto registrationDto) {
